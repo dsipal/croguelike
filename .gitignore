@@ -1,0 +1,8 @@
+build/
+libs/
+vcpkg_installed/
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+tutorial
