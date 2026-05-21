@@ -1,47 +1,38 @@
-#include <libtcod/console.hpp>
-#include <libtcod/sys.hpp>
-#include <string_view>
+#include <SDL3/SDL.h>
+#include <SDL3/SDL_main.h>
+#include <libtcod.hpp>
 
 
-int main()
+int main(int argc, char* argv[])
 {
-  //window dimension and title
-  constexpr int width = 80;
-  constexpr int height = 50;
-  constexpr std::string_view title = "libtcod C++ example";
-  
-  //init window
-  int x = width / 2;
-  int y = height / 2;
-  TCODConsole::initRoot(width, height, title.data());
+  //initialize the console and context
+  auto console = tcod::Console{80,50};
+  auto params = TCOD_ContextParams{};
+  params.console = console.get();
+  params.window_title = "libtcod C++ example";
+  params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
+  params.vsync = true;
+  params.argc = argc;
+  params.argv = argv;
+
+  auto context = tcod::Context(params);
 
   //main loop  
-  bool running = true;
-  while (running) {
-    // render
-    TCODConsole::root->clear(); // Clear the console before we render anything
-    TCODConsole::root->putchar(x, y, '@'); // Render an @ at the player position
-    TCODConsole::root->flush(); // Flushing the console redraws it to the screen
+  while (1) {
+    console.clear();
+    tcod::print(console, {40,25}, "Hello libtcod!", std::nullopt, std::nullopt);
+    context.present(console);
 
-    TCOD_key_t key {};
-    static TCOD_event_t TCODSystem::waitForEvent(int eventMask, TCOD_key_t *key, TCOD_mouse_t *mouse, bool flush);
 
-      switch (key.vk) {
-    case TCODK_UP:
-      y--;
-      break;
-    case TCODK_DOWN:
-      y++;
-      break;
-    case TCODK_LEFT:
-      x--;
-      break;
-    case TCODK_RIGHT:
-      x++;
-      break;
-    case TCODK_ESCAPE:
-      running = false;
-      break;
+    //keypress events + main loop
+    SDL_Event event;
+    SDL_WaitEvent(&event);
+    while (SDL_PollEvent(&event)) {
+      context.convert_event_coordinates(event);
+       switch (event.type) {
+        case SDL_EVENT_QUIT:
+          return 0;
+      }
     }
   }
 
