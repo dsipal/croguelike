@@ -8,7 +8,7 @@ if(NOT DEFINED CMAKE_TOOLCHAIN_FILE)
 endif()
 
 project(
-    libtcod-getting-started  # Project name, change this as needed.
+    roguelike # Project name, change this as needed.
     LANGUAGES C CXX
 )
 
@@ -39,5 +39,4 @@ endif()
 
 find_package(SDL3 CONFIG REQUIRED)
 find_package(libtcod CONFIG REQUIRED)
-target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3)
-target_link_libraries(${PROJECT_NAME} PRIVATE libtcod::libtcod)
+target_link_libraries(${PROJECT_NAME} PRIVATE SDL3::SDL3 libtcod::libtcod)

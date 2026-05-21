@@ -1,41 +1,47 @@
+#define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
+#include <SDL3/SDL_init.h>
 #include <SDL3/SDL_main.h>
 #include <libtcod.hpp>
 
+static tcod::Console g_console{80, 50};
+static tcod::Context g_context;
+static int player_x{40};
+static int player_y{25};
+static constexpr auto WHITE = tcod::ColorRGB{255, 255, 255};
 
-int main(int argc, char* argv[])
-{
-  //initialize the console and context
-  auto console = tcod::Console{80,50};
+SDL_AppResult SDL_AppInit(void **, int argc, char *argv[]) {
   auto params = TCOD_ContextParams{};
-  params.console = console.get();
+  params.console = g_console.get();
   params.window_title = "libtcod C++ example";
   params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
   params.vsync = true;
   params.argc = argc;
   params.argv = argv;
 
-  auto context = tcod::Context(params);
+  g_context = tcod::Context(params);
+  return SDL_APP_CONTINUE;
+}
 
-  //main loop  
-  while (1) {
-    console.clear();
-    tcod::print(console, {40,25}, "Hello libtcod!", std::nullopt, std::nullopt);
-    context.present(console);
+SDL_AppResult SDL_AppIterate(void *) {
+  g_console.clear();
 
-
-    //keypress events + main loop
-    SDL_Event event;
-    SDL_WaitEvent(&event);
-    while (SDL_PollEvent(&event)) {
-      context.convert_event_coordinates(event);
-       switch (event.type) {
-        case SDL_EVENT_QUIT:
-          return 0;
-      }
-    }
+  if (g_console.in_bounds({player_x, player_y})) {
+    g_console.at({player_x, player_y}).ch = '@';
   }
+  g_context.present(g_console);
+  return SDL_APP_CONTINUE;
+}
 
+SDL_AppResult SDL_AppEvent(void *, SDL_Event *event) {
+  g_context.convert_event_coordinates(*event);
+  switch (event->type) {
+    case SDL_EVENT_QUIT:
+      return SDL_APP_SUCCESS;
+  }
+  return SDL_APP_CONTINUE;
+}
+
+void SDL_AppQuit(void *, SDL_AppResult) {
   TCOD_quit();
-  return 0;
 }
