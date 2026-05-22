@@ -20,4 +20,4 @@ libtcod provides CMake targets:
   find_package(libtcod CONFIG REQUIRED)
   target_link_libraries(main PRIVATE libtcod::libtcod)
 
-All requested installations completed successfully in: 260 us
+All requested installations completed successfully in: 188 us

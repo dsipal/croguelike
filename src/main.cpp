@@ -1,88 +1,82 @@
+#include <vector>
 #define SDL_MAIN_USE_CALLBACKS
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_init.h>
 #include <SDL3/SDL_main.h>
 #include <libtcod.hpp>
+#include "Engine.hpp"
+#include "Actor.hpp"
+#include <array>
 
-static tcod::Console g_console{80, 50};
-static tcod::Context g_context;
-static int player_x{40};
-static int player_y{25};
+static int g_screen_width = 80;
+static int g_screen_height = 50;
+
 static constexpr auto WHITE = tcod::ColorRGB{255, 255, 255};
 
-/* returns 1 if moving forward with this keypress, -1 if moving backward, 0 if not moving. */
-std::vector<int> direction_user_should_move()
-{
-    const bool *key_states = SDL_GetKeyboardState(NULL);
-    int directionY = 0;
-    int directionX = 0;
+std::array<std::array<int, 4>, 10> g_rooms;
+std::array<std::array<int, 80>, 40> g_map;
 
-    /* (We're writing our code such that it sees both keys are pressed and cancels each other out!) */
-    if (key_states[SDL_SCANCODE_W]) {
-        directionY += 1;  /* pressed what would be "W" on a US QWERTY keyboard. Move forward! */
-    } 
+Engine engine(g_screen_width, g_screen_height);
 
-    if (key_states[SDL_SCANCODE_S]) {
-        directionY += -1;  /* pressed what would be "S" on a US QWERTY keyboard. Move backward! */
+std::array<int, 4> generateRoom() {
+    TCODRandom *rng = TCODRandom::getInstance();
+    int roomX = rng->getInt(1, g_screen_width - 1);
+    int roomY = rng->getInt(1, g_screen_height - 1);
+    int roomWidth = rng->getInt(3, 10);
+    int roomHeight = rng->getInt(3, 10);
+
+    std::array<int, 4> roomDimensions = {roomX, roomY, roomWidth, roomHeight};
+    return roomDimensions;
+}
+
+void drawRoom(std::array<int, 4> room) {
+    for (int x = room[0]; x < room[0] + room[2]; x++) {
+        for (int y = room[1]; y < room[1] + room[3]; y++) {
+            if (engine.console.in_bounds({x, y})) {
+                engine.console.at({x, y}).ch = '.';
+                engine.console.at({x, y}).fg = WHITE;
+            }
+        }
     }
-
-    if (key_states[SDL_SCANCODE_A]) {
-        directionX += -1;  /* pressed what would be "A" on a US QWERTY keyboard. Move left! */
-  
-    }
-
-    if (key_states[SDL_SCANCODE_D]) {
-        directionX += 1;  /* pressed what would be "D" on a US QWERTY keyboard. Move right! */
-    }
-
-    /* (In practice it's likely you'd be doing full directional input in here, but for simplicity, we're just showing forward and backward) */
-
-    return {directionY, directionX};  /* wasn't key in W or S location, don't move. */
 }
 
 
 
 SDL_AppResult SDL_AppInit(void **, int argc, char *argv[]) {
   auto params = TCOD_ContextParams{};
-  params.console = g_console.get();
+  params.console = engine.console.get();
   params.window_title = "libtcod C++ example";
   params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
   params.vsync = true;
   params.argc = argc;
   params.argv = argv;
 
-  g_context = tcod::Context(params);
+  engine.context = tcod::Context(params);
+  for (int i = 0; i < 10; i++) {
+    g_rooms[i] = generateRoom();
+  }
   return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppIterate(void *) {
-  g_console.clear();
+  engine.console.clear();
 
-  if (g_console.in_bounds({player_x, player_y})) {
-    g_console.at({player_x, player_y}).ch = '@';
+  engine.player->x = std::clamp(engine.player->x, 0, g_screen_width - 1);
+  engine.player->y = std::clamp(engine.player->y, 0, g_screen_height - 1);
+
+  for (const auto& room : g_rooms) {
+    drawRoom(room);
   }
-  g_context.present(g_console);
+
+  if (engine.console.in_bounds({engine.player->x, engine.player->y})) {
+    engine.console.at({engine.player->x, engine.player->y}).ch = '@';
+  }
+  engine.context.present(engine.console);
   return SDL_APP_CONTINUE;
 }
 
 SDL_AppResult SDL_AppEvent(void *, SDL_Event *event) {
-  g_context.convert_event_coordinates(*event);
-  switch (event->type) {
-    case SDL_EVENT_QUIT:
-      return SDL_APP_SUCCESS;
-
-    //handle user keypresses for vertical movement
-    case SDL_EVENT_KEY_DOWN: {
-      std::vector<int> dir = direction_user_should_move();
-      int new_y = player_y - dir[0];
-      int new_x = player_x + dir[1];
-      if (g_console.in_bounds({player_x, player_y})) {
-        player_y = new_y;
-        player_x = new_x;
-      }
-      break;
-    }
-  }
+  engine.update(event);
   return SDL_APP_CONTINUE;
 }
 
