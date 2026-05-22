@@ -16,6 +16,12 @@ Engine::Engine(int screen_width, int screen_height) : console{screen_width, scre
     actors.push_back(new Actor(40,23,'@',TCOD_ColorRGB{255,255,255}));
     this->actors = actors;
 
+    auto params = TCOD_ContextParams{};
+    params.console = console.get();
+    params.window_title = "libtcod C++ example";
+    params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
+    params.vsync = true;
+    context = tcod::Context(params);
     map = new Map(80,45);
 
 }

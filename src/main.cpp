@@ -42,16 +42,8 @@ void drawRoom(std::array<int, 4> room) {
 
 
 
-SDL_AppResult SDL_AppInit(void **, int argc, char *argv[]) {
-  auto params = TCOD_ContextParams{};
-  params.console = engine.console.get();
-  params.window_title = "libtcod C++ example";
-  params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
-  params.vsync = true;
-  params.argc = argc;
-  params.argv = argv;
+SDL_AppResult SDL_AppInit(void **, int, char **) {
 
-  engine.context = tcod::Context(params);
   for (int i = 0; i < 10; i++) {
     g_rooms[i] = generateRoom();
   }
