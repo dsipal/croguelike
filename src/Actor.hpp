@@ -1,3 +1,4 @@
+#pragma once
 #include <libtcod/color.hpp>
 #include <libtcod/console.hpp>
 #include <libtcod/context.hpp>

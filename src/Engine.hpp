@@ -1,3 +1,4 @@
+#pragma once
 #include <libtcod/console_types.hpp>
 #include <libtcod/context.hpp>
 #include <vector>

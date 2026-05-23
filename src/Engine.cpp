@@ -12,9 +12,7 @@
 Engine::Engine(int screen_width, int screen_height) : console{screen_width, screen_height} {
 
     player = new Actor(40,25,'@',TCOD_ColorRGB{255,255,255});
-    std::vector<Actor *> actors{player};
-    actors.push_back(new Actor(40,23,'@',TCOD_ColorRGB{255,255,255}));
-    this->actors = actors;
+    actors.push_back(player);
 
     auto params = TCOD_ContextParams{};
     params.console = console.get();
@@ -22,8 +20,14 @@ Engine::Engine(int screen_width, int screen_height) : console{screen_width, scre
     params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
     params.vsync = true;
     context = tcod::Context(params);
-    map = new Map(80,45);
+    map = new Map(80,50);
+}
 
+void Engine::render() {
+    map->render(console);
+    for (Actor* actor : actors) {
+        actor->render(console);
+    }
 }
 
 Engine::~Engine() {
@@ -64,6 +68,7 @@ std::vector<int> direction_user_should_move()
 
 void Engine::update(SDL_Event *event) {
     context.convert_event_coordinates(*event);
+
     switch (event->type) {
         case SDL_EVENT_QUIT:
             exit(0);
@@ -75,7 +80,8 @@ void Engine::update(SDL_Event *event) {
             player->y = new_y;
             player->x = new_x;
         }
-      break;
+    
+        break;
     }
   }
 }
