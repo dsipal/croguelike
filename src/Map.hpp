@@ -1,5 +1,4 @@
 #pragma once
-#include <array>
 #include <vector>
 #include <libtcod/color.hpp>
 #include <libtcod/console.hpp>
@@ -9,6 +8,13 @@ struct Tile {
     int ch;
     TCOD_ColorRGB fg;
     Tile() : walkable(true), ch(0), fg({255, 255, 255}) {}
+};
+
+struct Room {
+    int x, y, width, height;
+    Room(int x, int y, int width, int height) : x(x), y(y), width(width), height(height) {}
+    int center_x() const { return x + width / 2; }
+    int center_y() const { return y + height / 2; }
 };
 
 class Map {
@@ -22,7 +28,7 @@ class Map {
 
     protected:
         Tile *tiles;
-        std::vector<std::array<int, 4>> rooms;
+        std::vector<Room> rooms;
         void setWall(int x, int y);
-        void drawRoom(std::array<int, 4> room);
+        void drawRoom(Room room);
 };

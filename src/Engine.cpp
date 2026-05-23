@@ -1,4 +1,3 @@
-#include "libtcod.hpp"
 #include "Actor.hpp"
 #include "Map.hpp"
 #include <SDL3/SDL_events.h>

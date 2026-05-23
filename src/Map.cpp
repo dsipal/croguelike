@@ -2,15 +2,15 @@
 #include "Map.hpp"
 #include <libtcod/color.hpp>
 
-std::array<int, 4> generateRoom(int screen_width, int screen_height) {
+Room generateRoom(int screen_width, int screen_height) {
     TCODRandom *rng = TCODRandom::getInstance();
     int roomX = rng->getInt(1, screen_width - 1);
     int roomY = rng->getInt(1, screen_height - 1);
     int roomWidth = rng->getInt(3, 10);
     int roomHeight = rng->getInt(3, 10);
 
-    std::array<int, 4> roomDimensions = {roomX, roomY, roomWidth, roomHeight};
-    return roomDimensions;
+    Room room = {roomX, roomY, roomWidth, roomHeight};
+    return room;
 }
 
 Map::Map(int width, int height) : width(width), height(height) {
@@ -34,9 +34,9 @@ void Map::setWall(int x, int y) {
 
 
 
-void Map::drawRoom(std::array<int, 4> room) {
-    for (int x = room[0]; x < room[0] + room[2]; x++) {
-        for (int y = room[1]; y < room[1] + room[3]; y++) {
+void Map::drawRoom(Room room) {
+    for (int x = room.x; x < room.x + room.width; x++) {
+        for (int y = room.y; y < room.y + room.height; y++) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 Tile& tile = tiles[x + y * width];
                 tile.ch = '.';
@@ -47,7 +47,7 @@ void Map::drawRoom(std::array<int, 4> room) {
 }
 
 void Map::render(tcod::Console& console) {
-    for (std::array<int, 4> room : rooms) {
+    for (const Room& room : rooms) {
         drawRoom(room);
     }
     static const TCOD_ColorRGB darkWall{0,0,100};
