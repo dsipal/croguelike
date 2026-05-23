@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <utility>
 #include <libtcod/color.hpp>
 #include <libtcod/console.hpp>
 
@@ -7,7 +8,7 @@ struct Tile {
     bool walkable;
     int ch;
     TCOD_ColorRGB fg;
-    Tile() : walkable(true), ch(0), fg({255, 255, 255}) {}
+    Tile() : walkable(false), ch(0), fg({255, 255, 255}) {}
 };
 
 struct Room {
@@ -24,11 +25,14 @@ class Map {
         ~Map();
         bool isWall(int x, int y) const;
         void render(tcod::Console& console);
+        std::pair<int,int> getPlayerStart() const;
 
 
     protected:
         Tile *tiles;
         std::vector<Room> rooms;
         void setWall(int x, int y);
+        void setFloor(int x, int y);
         void drawRoom(Room room);
+        void drunkardsWalk();
 };

@@ -24,15 +24,43 @@ Room generateRoom(int screen_width, int screen_height, const std::vector<Room>& 
     }
 }
 
+void Map::drunkardsWalk() {
+    TCODRandom *rng = TCODRandom::getInstance();
+    for (int i = 0; i < (int)rooms.size() - 1; i++) {
+        int x = rooms[i].center_x();
+        int y = rooms[i].center_y();
+        int tx = rooms[i + 1].center_x();
+        int ty = rooms[i + 1].center_y();
+        while (x != tx || y != ty) {
+            setFloor(x, y);
+            if (x == tx) {
+                y += (ty > y) ? 1 : -1;
+            } else if (y == ty) {
+                x += (tx > x) ? 1 : -1;
+            } else if (rng->getInt(0, 1)) {
+                x += (tx > x) ? 1 : -1;
+            } else {
+                y += (ty > y) ? 1 : -1;
+            }
+        }
+        setFloor(x, y);
+    }
+}
+
 Map::Map(int width, int height) : width(width), height(height) {
     tiles = new Tile[width * height];
     for (int i = 0; i < 10; i++) {
         rooms.push_back(generateRoom(width, height, rooms));
     }
+    drunkardsWalk();
 }
 Map::~Map() {
     delete [] tiles;
 }
+std::pair<int,int> Map::getPlayerStart() const {
+    return {rooms[0].center_x(), rooms[0].center_y()};
+}
+
 bool Map::isWall(int x, int y) const {
     return !tiles[x+y*width].walkable;
 }
@@ -41,13 +69,16 @@ void Map::setWall(int x, int y) {
     tiles[x+y*width].walkable=false;
 }
 
-
+void Map::setFloor(int x, int y) {
+    tiles[x+y*width].walkable=true;
+}
 
 void Map::drawRoom(Room room) {
     for (int x = room.x; x < room.x + room.width; x++) {
         for (int y = room.y; y < room.y + room.height; y++) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 Tile& tile = tiles[x + y * width];
+                tile.walkable = true;
                 tile.ch = '.';
                 tile.fg = {255, 255, 255};
             }

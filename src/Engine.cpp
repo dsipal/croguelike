@@ -10,9 +10,6 @@
 
 Engine::Engine(int screen_width, int screen_height) : console{screen_width, screen_height} {
 
-    player = new Actor(40,25,'@',TCOD_ColorRGB{255,255,255});
-    actors.push_back(player);
-
     auto params = TCOD_ContextParams{};
     params.console = console.get();
     params.window_title = "libtcod C++ example";
@@ -20,6 +17,10 @@ Engine::Engine(int screen_width, int screen_height) : console{screen_width, scre
     params.vsync = true;
     context = tcod::Context(params);
     map = new Map(80,50);
+
+    auto [start_x, start_y] = map->getPlayerStart();
+    player = new Actor(start_x, start_y, '@', TCOD_ColorRGB{255,255,255});
+    actors.push_back(player);
 }
 
 void Engine::render() {
@@ -75,7 +76,7 @@ void Engine::update(SDL_Event *event) {
             std::vector<int> dir = direction_user_should_move();
             int new_y = player->y - dir[0];
             int new_x = player->x + dir[1];
-        if (console.in_bounds({player->x, player->y})) {
+        if (console.in_bounds({new_x, new_y}) && !map->isWall(new_x, new_y)) {
             player->y = new_y;
             player->x = new_x;
         }
