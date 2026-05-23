@@ -6,8 +6,8 @@ Room generateRoom(int screen_width, int screen_height, const std::vector<Room>& 
     TCODRandom *rng = TCODRandom::getInstance();
     while (true) {
         Room room = {rng->getInt(1,
-            screen_width - 10),
-            rng->getInt(1, screen_height - 10),
+            screen_width - 20),
+            rng->getInt(1, screen_height - 20),
             rng->getInt(3, 20),
             rng->getInt(3, 20)};
         bool overlaps = false;
@@ -79,7 +79,6 @@ void Map::drawRoom(Room room) {
             if (x >= 0 && x < width && y >= 0 && y < height) {
                 Tile& tile = tiles[x + y * width];
                 tile.walkable = true;
-                tile.ch = '.';
                 tile.fg = {255, 255, 255};
             }
         }
