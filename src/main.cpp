@@ -9,8 +9,6 @@
 static int g_screen_width = 80;
 static int g_screen_height = 50;
 
-static constexpr auto WHITE = tcod::ColorRGB{255, 255, 255};
-
 Engine engine(g_screen_width, g_screen_height);
 
 
