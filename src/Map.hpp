@@ -14,7 +14,7 @@ struct Tile {
 
 struct Room {
   int x, y, width, height;
-  Room(int x, int y, int width, int height)
+  Room(int width, int height, int x, int y)
       : x(x), y(y), width(width), height(height) {}
   int center_x() const { return x + width / 2; }
   int center_y() const { return y + height / 2; }

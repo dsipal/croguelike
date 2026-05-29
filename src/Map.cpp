@@ -1,15 +1,15 @@
 #include "Map.hpp"
 #include "libtcod.hpp"
+#include <iostream>
 #include <libtcod/bsp.hpp>
 #include <libtcod/color.hpp>
 
-Room generateRoom(int width, int height) {
+Room generateRoom(int width, int height, int x, int y) {
   TCODRandom *rng = TCODRandom::getInstance();
 
   // function will run until it generates a room with no overlaps to previous
   // rooms
-  Room room = {rng->getInt(1, width - 20), rng->getInt(1, height - 20),
-               rng->getInt(3, 20), rng->getInt(3, 20)};
+  Room room = {width - rng->getInt(1, 5), height - rng->getInt(1, 5), x, y};
 
   return room;
 }
@@ -46,12 +46,12 @@ private:
   TCODRandom *rng = TCODRandom::getInstance();
 
 public:
-  BspListener(Map &map) : map(map), room_count(0) {}
+  BspListener(Map &map) : map(map), room_count(4) {}
 
   bool visitNode(TCODBsp *node, void *) override {
     if (node->isLeaf()) {
-      Room room = generateRoom(node->w - rng->getInt(3, 10),
-                               node->h - rng->getInt(3, 10));
+      std::cout << node->x << ", " << node->y << std::endl;
+      Room room = generateRoom(node->w, node->h, node->x, node->y);
       map.rooms.push_back(room);
       return true;
     } else
@@ -63,13 +63,13 @@ Map::Map(int width, int height, int room_count)
     : width(width), height(height), room_count(room_count) {
   tiles = new Tile[width * height];
   TCODBsp bsp(0, 0, width, height);
-  bsp.splitRecursive(NULL, 16, 16, 16, 2.0f, 1.5f);
+  bsp.splitRecursive(NULL, 8, 16, 16, 2.0f, 1.5f);
   BspListener listener(*this);
 
   // iterate through the bsp and run the listener function
   bsp.traverseInvertedLevelOrder(&listener, NULL);
 
-  //drunkardsWalk();
+  drunkardsWalk();
 }
 Map::~Map() { delete[] tiles; }
 std::pair<int, int> Map::getPlayerStart() const {
