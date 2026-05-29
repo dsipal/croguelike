@@ -4,13 +4,18 @@
 
 Room generateRoom(int screen_width, int screen_height, const std::vector<Room>& rooms) {
     TCODRandom *rng = TCODRandom::getInstance();
+ 
+    //function will run until it generates a room with no overlaps to previous rooms
     while (true) {
         Room room = {rng->getInt(1,
             screen_width - 20),
             rng->getInt(1, screen_height - 20),
             rng->getInt(3, 20),
             rng->getInt(3, 20)};
+
+
         bool overlaps = false;
+
         for (const auto& other_room : rooms) {
             if (room.x < other_room.x + other_room.width &&
                 room.x + room.width > other_room.x &&
@@ -20,6 +25,7 @@ Room generateRoom(int screen_width, int screen_height, const std::vector<Room>& 
                 break;
             }
         }
+        
         if (!overlaps) return room;
     }
 }
@@ -33,6 +39,7 @@ void Map::drunkardsWalk() {
         int ty = rooms[i + 1].center_y();
         while (x != tx || y != ty) {
             setFloor(x, y);
+            setFloor(x+1,y+1);
             if (x == tx) {
                 y += (ty > y) ? 1 : -1;
             } else if (y == ty) {
@@ -47,9 +54,9 @@ void Map::drunkardsWalk() {
     }
 }
 
-Map::Map(int width, int height) : width(width), height(height) {
+Map::Map(int width, int height, int room_count) : width(width), height(height), room_count(room_count) {
     tiles = new Tile[width * height];
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < room_count; i++) {
         rooms.push_back(generateRoom(width, height, rooms));
     }
     drunkardsWalk();

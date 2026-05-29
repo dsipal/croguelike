@@ -8,7 +8,7 @@
 #include <libtcod/context.hpp>
 #include "Engine.hpp"
 
-Engine::Engine(int screen_width, int screen_height) : console{screen_width, screen_height} {
+Engine::Engine(int screen_width, int screen_height, int room_count) : console{screen_width, screen_height} {
 
     auto params = TCOD_ContextParams{};
     params.console = console.get();
@@ -16,7 +16,7 @@ Engine::Engine(int screen_width, int screen_height) : console{screen_width, scre
     params.sdl_window_flags = SDL_WINDOW_RESIZABLE;
     params.vsync = true;
     context = tcod::Context(params);
-    map = new Map(80,50);
+    map = new Map(screen_width, screen_height, room_count);
 
     auto [start_x, start_y] = map->getPlayerStart();
     player = new Actor(start_x, start_y, '@', TCOD_ColorRGB{255,255,255});

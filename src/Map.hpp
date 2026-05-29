@@ -20,8 +20,8 @@ struct Room {
 
 class Map {
     public:
-        int width, height;
-        Map(int width, int height);
+        int width, height, room_count;
+        Map(int width, int height, int room_count);
         ~Map();
         bool isWall(int x, int y) const;
         void render(tcod::Console& console);

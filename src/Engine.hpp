@@ -12,7 +12,7 @@ class Engine {
         std::vector<Actor *> actors;
         Actor *player;
         Map *map;
-        Engine(int screen_width, int screen_height);
+        Engine(int screen_width, int screen_height, int room_count);
         ~Engine();
         void update(SDL_Event *event);
         void render();
