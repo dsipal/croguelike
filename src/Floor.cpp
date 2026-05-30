@@ -1,4 +1,5 @@
 #include "Floor.hpp"
+#include "Actor.hpp"
 #include <iostream>
 #include <libtcod/bsp.hpp>
 #include <libtcod/console_types.hpp>
@@ -86,6 +87,10 @@ bool Floor::isInFov(int x, int y) {
   return false;
 };
 
+void Floor::computeFov() {
+  map->computeFov(engine->player->x, engine->player->y, engine->fovRadius);
+}
+
 void Floor::setWall(int x, int y) {
   tiles[x + y * width].walkable = false;
   map->setProperties(x, y, false, false);
@@ -133,6 +138,8 @@ void Floor::drunkardsWalk() {
 void Floor::render(tcod::Console &console) {
   static const TCOD_ColorRGB darkWall{0, 0, 100};
   static const TCOD_ColorRGB darkGround{50, 50, 150};
+  static const TCOD_ColorRGB lightWall{130, 110, 50};
+  static const TCOD_ColorRGB lightGround{200, 180, 50};
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
       if (console.in_bounds({x, y})) {
@@ -143,10 +150,11 @@ void Floor::render(tcod::Console &console) {
           console.at({x, y}).fg = tile.fg;
         }
       }
+      if (isInFov(x, y)) {
+        console.at({x, y}).bg = isWall(x, y) ? lightWall : lightGround;
+      } else if (isExplored(x, y)) {
+        console.at({x, y}).bg = isWall(x, y) ? darkWall : darkGround;
+      }
     }
   }
-}
-
-// std::pair<int, int> Floor::getPlayerStart() const {
-//   return {rooms[0].center_x(), rooms[0].center_y()};
-// }
+};

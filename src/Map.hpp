@@ -9,6 +9,7 @@
 class Map {
 public:
   int width, height;
+  int currentFloor;
   std::vector<Floor> floors;
   Map(int width, int height);
   ~Map();

@@ -9,7 +9,7 @@
 #include <libtcod/context.hpp>
 
 Engine::Engine(int screen_width, int screen_height)
-    : console{screen_width, screen_height} {
+    : fovRadius(10), computeFov(true), console{screen_width, screen_height} {
 
   auto params = TCOD_ContextParams{};
   params.console = console.get();
@@ -48,6 +48,7 @@ std::vector<int> direction_user_should_move() {
   if (key_states[SDL_SCANCODE_W]) {
     directionY += 1; /* pressed what would be "W" on a US QWERTY keyboard. Move
                         forward! */
+    engine.computeFov = true;
   }
 
   if (key_states[SDL_SCANCODE_S]) {

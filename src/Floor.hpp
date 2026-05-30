@@ -1,3 +1,4 @@
+#include "Engine.hpp"
 #include <libtcod/bsp.hpp>
 #include <libtcod/color.h>
 #include <libtcod/console.hpp>
@@ -25,10 +26,11 @@ public:
   int width, height;
   std::unique_ptr<TCODMap> map;
   std::vector<Room> rooms;
+  Engine *engine;
   Floor(int width, int height);
   ~Floor();
-  Floor(Floor&&) = default;
-  Floor& operator=(Floor&&) = default;
+  Floor(Floor &&) = default;
+  Floor &operator=(Floor &&) = default;
   std::pair<int, int> getPlayerStart() const;
   bool isWall(int x, int y) const;
   bool isInFov(int x, int y);
