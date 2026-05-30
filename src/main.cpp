@@ -10,7 +10,7 @@
 static int g_screen_width = 80;
 static int g_screen_height = 50;
 
-Engine engine(g_screen_width, g_screen_height, 10);
+Engine engine(g_screen_width, g_screen_height);
 
 SDL_AppResult SDL_AppInit(void **, int, char **) {
   std::cout << "Player position: (" << engine.player->x << ", "
