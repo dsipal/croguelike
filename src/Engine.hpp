@@ -8,16 +8,17 @@ class Map;
 class Engine {
 public:
   int fovRadius;
+  bool computeFov;
   tcod::Console console;
   tcod::Context context;
   std::vector<Actor *> actors;
   Actor *player;
   Map *map;
-  bool computeFov;
   Engine(int screen_width, int screen_height);
   ~Engine();
   void update(SDL_Event *event);
   void render();
+  
 };
 
 extern Engine engine;

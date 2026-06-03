@@ -87,8 +87,8 @@ bool Floor::isInFov(int x, int y) {
   return false;
 };
 
-void Floor::computeFov() {
-  map->computeFov(engine->player->x, engine->player->y, engine->fovRadius);
+void Floor::computeFov(int playerX, int playerY, int fovRadius) {
+  map->computeFov(playerX, playerY, fovRadius);
 }
 
 void Floor::setWall(int x, int y) {
@@ -142,14 +142,6 @@ void Floor::render(tcod::Console &console) {
   static const TCOD_ColorRGB lightGround{200, 180, 50};
   for (int x = 0; x < width; x++) {
     for (int y = 0; y < height; y++) {
-      if (console.in_bounds({x, y})) {
-        const Tile &tile = tiles[x + y * width];
-        console.at({x, y}).bg = isWall(x, y) ? darkWall : darkGround;
-        if (tile.ch) {
-          console.at({x, y}).ch = tile.ch;
-          console.at({x, y}).fg = tile.fg;
-        }
-      }
       if (isInFov(x, y)) {
         console.at({x, y}).bg = isWall(x, y) ? lightWall : lightGround;
       } else if (isExplored(x, y)) {

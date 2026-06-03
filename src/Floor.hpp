@@ -35,7 +35,7 @@ public:
   bool isWall(int x, int y) const;
   bool isInFov(int x, int y);
   bool isExplored(int x, int y) const;
-  void computeFov();
+  void computeFov(int playerX, int playerY, int fovRadius);
   std::pair<int, int> getNorthWall(int room_index);
   std::pair<int, int> getSouthWall(int room_index);
   std::pair<int, int> getEastWall(int room_index);

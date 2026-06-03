@@ -9,7 +9,7 @@
 #include <libtcod/context.hpp>
 
 Engine::Engine(int screen_width, int screen_height)
-    : fovRadius(10), computeFov(true), console{screen_width, screen_height} {
+    : fovRadius(4), computeFov(true), console{screen_width, screen_height} {
 
   auto params = TCOD_ContextParams{};
   params.console = console.get();
@@ -54,16 +54,19 @@ std::vector<int> direction_user_should_move() {
   if (key_states[SDL_SCANCODE_S]) {
     directionY += -1; /* pressed what would be "S" on a US QWERTY keyboard. Move
                          backward! */
+    engine.computeFov = true;
   }
 
   if (key_states[SDL_SCANCODE_A]) {
     directionX +=
         -1; /* pressed what would be "A" on a US QWERTY keyboard. Move left! */
+    engine.computeFov = true;
   }
 
   if (key_states[SDL_SCANCODE_D]) {
     directionX +=
         1; /* pressed what would be "D" on a US QWERTY keyboard. Move right! */
+    engine.computeFov = true;
   }
 
   /* (In practice it's likely you'd be doing full directional input in here, but
@@ -97,7 +100,10 @@ void Engine::update(SDL_Event *event) {
       player->y = new_y;
       player->x = new_x;
     }
-
+    if (computeFov) {
+      map->floors[0].computeFov(this->player->x, this->player->y, fovRadius);
+      computeFov = false;
+    }
     break;
   }
   }
