@@ -9,7 +9,7 @@
 #include <libtcod/context.hpp>
 
 Engine::Engine(int screen_width, int screen_height)
-    : fovRadius(4), computeFov(true), console{screen_width, screen_height} {
+    : fovRadius(10), computeFov(true), console{screen_width, screen_height} {
 
   auto params = TCOD_ContextParams{};
   params.console = console.get();
@@ -22,6 +22,7 @@ Engine::Engine(int screen_width, int screen_height)
   auto [start_x, start_y] = map->floors[0].getPlayerStart();
   player = new Actor(start_x, start_y, '@', TCOD_ColorRGB{255, 255, 255});
   actors.push_back(player);
+  map->floors[0].computeFov(player->x, player->y, fovRadius);
 }
 
 void Engine::render() {
