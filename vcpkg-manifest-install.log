@@ -1,128 +1,14 @@
 Detecting compiler hash for triplet x64-linux...
 Compiler found: /usr/bin/c++
 The following packages are already installed:
+    libtcod[core,zlib,unicode,sdl,png]:x64-linux@2.2.2
+  * lodepng:x64-linux@2021-12-04#1
+    sdl3[core,x11,wayland,ibus]:x64-linux@3.4.8#1
+  * stb:x64-linux@2024-07-29#1
   * utf8proc:x64-linux@2.11.3
   * vcpkg-cmake:x64-linux@2024-04-23
   * vcpkg-cmake-config:x64-linux@2024-05-23
   * zlib:x64-linux@1.3.2
-The following packages will be built and installed:
-    libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2
-  * lodepng:x64-linux@2021-12-04#1
-    sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1
-  * stb:x64-linux@2024-07-29#1
-Additional packages (*) will be modified to complete this operation.
-Restored 0 package(s) from /home/devin/.cache/vcpkg/archives in 15 us. Use --debug to see more details.
-Installing 1/4 sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1...
-sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1 package ABI: eb54cf778bb32d947565882261adc5ad4c7d2e84cce23433b70d72496799ac9b
-Building sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1...
--- Using cached libsdl-org-SDL-release-3.4.8.tar.gz
--- Cleaning sources at /home/devin/Code/roguelike/vcpkg/buildtrees/sdl3/src/ease-3.4.8-4fc18f166d.clean. Use --editable to skip cleaning for the packages you specify.
--- Extracting source /home/devin/Code/roguelike/vcpkg/downloads/libsdl-org-SDL-release-3.4.8.tar.gz
--- Applying patch fix-freebsd.patch
--- Using source at /home/devin/Code/roguelike/vcpkg/buildtrees/sdl3/src/ease-3.4.8-4fc18f166d.clean
-CMake Warning at ports/sdl3/portfile.cmake:35 (message):
-  You will need to install Xorg dependencies to use feature x11:
-
-  sudo apt install libx11-dev libxft-dev libxext-dev
-
-Call Stack (most recent call first):
-  scripts/ports.cmake:206 (include)
-
-
-CMake Warning at ports/sdl3/portfile.cmake:38 (message):
-  You will need to install Wayland dependencies to use feature wayland:
-
-  sudo apt install libwayland-dev libxkbcommon-dev libegl1-mesa-dev
-
-Call Stack (most recent call first):
-  scripts/ports.cmake:206 (include)
-
-
-CMake Warning at ports/sdl3/portfile.cmake:41 (message):
-  You will need to install ibus dependencies to use feature ibus:
-
-  sudo apt install libibus-1.0-dev
-
-Call Stack (most recent call first):
-  scripts/ports.cmake:206 (include)
-
-
--- Configuring x64-linux
-CMake Warning at /home/devin/Code/roguelike/vcpkg_installed/x64-linux/share/vcpkg-cmake/vcpkg_cmake_configure.cmake:344 (message):
-  The following variables are not used in CMakeLists.txt:
-
-      SDL_UNIX_CONSOLE_BUILD
-
-  Please recheck them and remove the unnecessary options from the
-  `vcpkg_cmake_configure` call.
-
-  If these options should still be passed for whatever reason, please use the
-  `MAYBE_UNUSED_VARIABLES` argument.
-Call Stack (most recent call first):
-  ports/sdl3/portfile.cmake:58 (vcpkg_cmake_configure)
-  scripts/ports.cmake:206 (include)
-
-
--- Building x64-linux-dbg
--- Building x64-linux-rel
--- Fixing pkgconfig file: /home/devin/Code/roguelike/vcpkg/packages/sdl3_x64-linux/lib/pkgconfig/sdl3.pc
--- Fixing pkgconfig file: /home/devin/Code/roguelike/vcpkg/packages/sdl3_x64-linux/debug/lib/pkgconfig/sdl3.pc
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/sdl3_x64-linux/share/sdl3/usage
--- Performing post-build validation
-Starting submission of sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1 to 1 binary cache(s) in the background
-Elapsed time to handle sdl3:x64-linux: 1.4 min
-Installing 2/4 lodepng:x64-linux@2021-12-04#1...
-lodepng:x64-linux@2021-12-04#1 package ABI: 7d39820cb8aac09888cdce7f3061b198b147455ae03e9016caf215f9558cf107
-Building lodepng:x64-linux@2021-12-04#1...
-Downloading https://github.com/lvandeve/lodepng/archive/8c6a9e30576f07bf470ad6f09458a2dcd7a6a84a.tar.gz -> lvandeve-lodepng-8c6a9e30576f07bf470ad6f09458a2dcd7a6a84a.tar.gz
-Successfully downloaded lvandeve-lodepng-8c6a9e30576f07bf470ad6f09458a2dcd7a6a84a.tar.gz
--- Extracting source /home/devin/Code/roguelike/vcpkg/downloads/lvandeve-lodepng-8c6a9e30576f07bf470ad6f09458a2dcd7a6a84a.tar.gz
--- Using source at /home/devin/Code/roguelike/vcpkg/buildtrees/lodepng/src/dcd7a6a84a-1b95b8ca64.clean
--- Configuring x64-linux
--- Building x64-linux-dbg
--- Building x64-linux-rel
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/lodepng_x64-linux/share/lodepng/usage
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/lodepng_x64-linux/share/lodepng/copyright
--- Performing post-build validation
-Starting submission of lodepng:x64-linux@2021-12-04#1 to 1 binary cache(s) in the background
-Elapsed time to handle lodepng:x64-linux: 11 s
-Completed submission of sdl3[core,ibus,wayland,x11]:x64-linux@3.4.8#1 to 1 binary cache(s) in 2.6 s
-Installing 3/4 stb:x64-linux@2024-07-29#1...
-stb:x64-linux@2024-07-29#1 package ABI: d0c487afda1950ec25e46096ca182f4a6fdfcf441eab93306559670a007ab1ca
-Building stb:x64-linux@2024-07-29#1...
-Downloading https://github.com/nothings/stb/archive/f75e8d1cad7d90d72ef7a4661f1b994ef78b4e31.tar.gz -> nothings-stb-f75e8d1cad7d90d72ef7a4661f1b994ef78b4e31.tar.gz
-Successfully downloaded nothings-stb-f75e8d1cad7d90d72ef7a4661f1b994ef78b4e31.tar.gz
--- Extracting source /home/devin/Code/roguelike/vcpkg/downloads/nothings-stb-f75e8d1cad7d90d72ef7a4661f1b994ef78b4e31.tar.gz
--- Using source at /home/devin/Code/roguelike/vcpkg/buildtrees/stb/src/4ef78b4e31-bf024d35de.clean
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/stb_x64-linux/share/stb/FindStb.cmake
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/stb_x64-linux/share/stb/vcpkg-cmake-wrapper.cmake
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/stb_x64-linux/share/stb/usage
--- Installing: /home/devin/Code/roguelike/vcpkg/packages/stb_x64-linux/share/stb/copyright
--- Performing post-build validation
-Starting submission of stb:x64-linux@2024-07-29#1 to 1 binary cache(s) in the background
-Elapsed time to handle stb:x64-linux: 1.3 s
-Completed submission of lodepng:x64-linux@2021-12-04#1 to 1 binary cache(s) in 109 ms
-Installing 4/4 libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2...
-libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2 package ABI: af224d15e62fa2d7fd7a106f86d64a1a42a0a2e586bb281d3d3592acb8b9b7eb
-Building libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2...
-Downloading https://github.com/libtcod/libtcod/archive/2.2.2.tar.gz -> libtcod-libtcod-2.2.2.tar.gz
-Successfully downloaded libtcod-libtcod-2.2.2.tar.gz
--- Extracting source /home/devin/Code/roguelike/vcpkg/downloads/libtcod-libtcod-2.2.2.tar.gz
--- Using source at /home/devin/Code/roguelike/vcpkg/buildtrees/libtcod/src/2.2.2-f22489a769.clean
--- Configuring x64-linux
--- Building x64-linux-dbg
--- Building x64-linux-rel
--- Performing post-build validation
-Starting submission of libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2 to 1 binary cache(s) in the background
-Elapsed time to handle libtcod:x64-linux: 13 s
-Installed contents are licensed to you by owners. Microsoft is not responsible for, nor does it grant any licenses to, third-party packages.
-Some packages did not declare an SPDX license. Check the `copyright` file for each package for more information about their licensing.
-Packages installed in this vcpkg installation declare the following licenses:
-(MIT OR CC-PDDC)
-Apache-2.0
-BSD-3-Clause
-MIT
-Zlib
 sdl3 provides CMake targets:
 
   find_package(SDL3 CONFIG REQUIRED)
@@ -134,7 +20,4 @@ libtcod provides CMake targets:
   find_package(libtcod CONFIG REQUIRED)
   target_link_libraries(main PRIVATE libtcod::libtcod)
 
-Completed submission of stb:x64-linux@2024-07-29#1 to 1 binary cache(s) in 124 ms
-Waiting for 1 remaining binary cache submissions...
-Completed submission of libtcod[core,png,sdl,unicode,zlib]:x64-linux@2.2.2 to 1 binary cache(s) in 363 ms (1/1)
-All requested installations completed successfully in: 1.8 min
+All requested installations completed successfully in: 162 us

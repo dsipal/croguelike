@@ -1,7 +1,6 @@
 #pragma once
 #include <libtcod/console_types.hpp>
 #include <libtcod/context.hpp>
-#include <vector>
 class Actor;
 class Map;
 
@@ -11,7 +10,6 @@ public:
   bool computeFov;
   tcod::Console console;
   tcod::Context context;
-  std::vector<Actor *> actors;
   Actor *player;
   Map *map;
   Engine(int screen_width, int screen_height);

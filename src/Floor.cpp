@@ -3,16 +3,6 @@
 #include <iostream>
 #include <libtcod/bsp.hpp>
 #include <libtcod/console_types.hpp>
-#include <libtcod/mersenne.hpp>
-
-Room generateRoom(int node_width, int node_height, int node_x, int node_y) {
-  TCODRandom *rng = TCODRandom::getInstance();
-  int room_w = rng->getInt(node_width / 2, node_width - 2);
-  int room_h = rng->getInt(node_height / 2, node_height - 2);
-  int room_x = node_x + rng->getInt(1, node_width - room_w - 1);
-  int room_y = node_y + rng->getInt(1, node_height - room_h - 1);
-  return Room(room_w, room_h, room_x, room_y);
-}
 
 class BSPListener : public ITCODBspCallback {
 private:
@@ -26,8 +16,7 @@ public:
   bool visitNode(TCODBsp *node, void *) override {
     if (node->isLeaf()) {
       std::cout << node->x << ", " << node->y << std::endl;
-      Room room = generateRoom(node->w, node->h, node->x, node->y);
-      floor.rooms.push_back(room);
+      floor.rooms.push_back(Room::generate(node->w, node->h, node->x, node->y));
       return true;
     } else
       return false;
@@ -47,12 +36,39 @@ Floor::Floor(int width, int height) {
     drawRoom(room);
   }
   drunkardsWalk();
+  placeExit();
 };
 
 Floor::~Floor() = default;
 
+void Floor::addMonster(int x, int y) {
+  TCODRandom *rng = TCODRandom::getInstance();
+  if (rng->getInt(0, 100) < 80) {
+    actors.push_back(new Actor(x, y, 'o', TCOD_ColorRGB{63, 127, 63}));
+  } else {
+    actors.push_back(new Actor(x, y, 'T', TCOD_ColorRGB{0, 127, 0}));
+  }
+}
+
+void Floor::populateRoom(Room room) {
+  TCODRandom *rng = TCODRandom::getInstance();
+  int x = rng->getInt(0, room.width - 1);
+  int y = rng->getInt(0, room.height - 1);
+
+  addMonster(room.x + x, room.y + y);
+}
+
 std::pair<int, int> Floor::getPlayerStart() const {
   return {rooms[0].center_x(), rooms[0].center_y()};
+}
+
+std::pair<int, int> Floor::placeExit() {
+  TCODRandom *rng = TCODRandom::getInstance();
+  int rand = rng->getInt(0, rooms.size() - 1);
+  std::cout << rooms[rand].center_x();
+  std::cout << rooms[rand].center_y();
+  setExit(rooms[rand].center_x(), rooms[rand].center_y());
+  return {rooms[rand].center_x(), rooms[rand].center_y()};
 }
 
 std::pair<int, int> Floor::getNorthWall(int room_index) {
@@ -79,6 +95,14 @@ bool Floor::isWall(int x, int y) const { return !map->isWalkable(x, y); }
 bool Floor::isExplored(int x, int y) const {
   return tiles[x + y * width].explored;
 }
+bool Floor::canWalk(int x, int y, const Actor *mover) const {
+  if (isWall(x, y))
+    return false;
+  for (const Actor *a : actors)
+    if (a != mover && a->x == x && a->y == y)
+      return false;
+  return true;
+}
 bool Floor::isInFov(int x, int y) {
   if (map->isInFov(x, y)) {
     tiles[x + y * width].explored = true;
@@ -91,14 +115,13 @@ void Floor::computeFov(int playerX, int playerY, int fovRadius) {
   map->computeFov(playerX, playerY, fovRadius);
 }
 
-void Floor::setWall(int x, int y) {
-  tiles[x + y * width].walkable = false;
-  map->setProperties(x, y, false, false);
-}
+void Floor::setWall(int x, int y) { map->setProperties(x, y, false, false); }
 
-void Floor::setFloor(int x, int y) {
-  tiles[x + y * width].walkable = true;
-  map->setProperties(x, y, true, true);
+void Floor::setFloor(int x, int y) { map->setProperties(x, y, true, true); }
+
+void Floor::setExit(int x, int y) {
+  tiles[x + y * width].ch = '#';
+  map->setProperties(x, y, false, true);
 }
 
 void Floor::drawRoom(Room room) {
